@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Manage cars · CarRent</title>
+<link rel="icon" href="{{ url_for('static', filename='images/Sleek Purple CarRent Logo.png') }}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_features.css') }}">
+</head>
+<body>
+    <main class="page admin-page">
+        <div class="container">
+<header class="admin-head">
+    <div>
+        <span class="eyebrow">Rent Your Dream</span>
+        <h1 class="section-title mb-0">Manage <span class="text-accent">cars</span></h1>
+        <p class="text-muted small mb-0">Add vehicles, update rental prices, or temporarily remove cars from booking.</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        <a class="btn btn-outline-custom btn-sm" href="{{ url_for('admin') }}">Dashboard</a>
+        <a class="btn btn-outline-custom btn-sm" href="{{ url_for('admin_customers') }}">Customers</a>
+        <a class="btn btn-outline-custom btn-sm" href="{{ url_for('admin_logout') }}">Logout</a>
+    </div>
+</header>
+{% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}
+<div class="admin-flash {{ category }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endwith %}
+<div class="admin-management-grid">
+    <section class="glass-card admin-form-card">
+        <span class="eyebrow">{{ 'Edit vehicle' if edit_car else 'Fleet inventory' }}</span>
+        <h2>{{ 'Update car details' if edit_car else 'Add a car' }}</h2>
+        <form method="post" class="admin-form">
+            <input type="hidden" name="car_id" value="{{ edit_car['car_id'] if edit_car else '' }}">
+            <label for="name">Car name</label>
+            <input id="name" name="name" required maxlength="100" value="{{ edit_car['name'] if edit_car else '' }}" placeholder="e.g. Hyundai Creta">
+            <label for="price_per_day">Rental price per day (₹)</label>
+            <input id="price_per_day" name="price_per_day" type="number" min="0" step="1" required value="{{ edit_car['price_per_day'] if edit_car else '' }}" placeholder="3000">
+            <label for="category">Category</label>
+            <select id="category" name="category">
+                <option {{ 'selected' if edit_car and edit_car['category']=='SUV' else '' }}>SUV</option>
+                <option {{ 'selected' if edit_car and edit_car['category']=='Sedan' else '' }}>Sedan</option>
+                <option {{ 'selected' if edit_car and edit_car['category']=='Hatchback' else '' }}>Hatchback</option>
+                <option {{ 'selected' if edit_car and edit_car['category']=='Luxury' else '' }}>Luxury</option>
+                <option {{ 'selected' if edit_car and edit_car['category']=='Luxury' else '' }}>Offroad</option>
+                <option {{ 'selected' if edit_car and edit_car['category']=='Luxury' else '' }}>Vintage</option>
+                <option {{ 'selected' if not edit_car or edit_car['category']=='Other' else '' }}>Other</option>
+            </select>
+            <label for="image_url">Image URL (optional)</label>
+            <input id="image_url" name="image_url" type="url" maxlength="500" value="{{ edit_car['image_url'] if edit_car else '' }}" placeholder="https://...">
+            <div class="d-flex gap-2 mt-3">
+                <button class="btn btn-primary-custom" type="submit">
+                    <i class="bi bi-check2-circle"></i> 
+                    {{ 'Save changes' if edit_car else 'Add car' }}</button>
+                    {% if edit_car %}
+                    <a class="btn btn-outline-custom" href="{{ url_for('admin_cars') }}">Cancel</a>
+                    {% endif %}
+                </div>
+            </form>
+        </section>
+<section class="glass-card admin-fleet-card"><div class="admin-chart-heading">
+    <div>
+        <span class="eyebrow">Inventory</span>
+        <h2>Fleet vehicles <span class="small text-muted">({{ cars|length }})</span></h2>
+    </div>
+    <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="search" class="form-control-dark" placeholder="Search cars…" data-table-search="#carsRows" aria-label="Search cars">
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="data-table">
+        <thead><tr><th>Vehicle</th>
+            <th>Category</th>
+            <th>Daily price</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="carsRows">
+        {% for car in cars %}
+        <tr>
+            <td><strong>{{ car['name'] }}</strong></td>
+            <td>{{ car['category'] }}</td>
+            <td>₹{{ '{:,}'.format(car['price_per_day']) }}</td>
+            <td><span class="status-badge {{ 'status-confirmed' if car['is_active'] else 'status-cancelled' }}">{{ 'Available' if car['is_active'] else 'Hidden' }}</span></td>
+            <td class="text-nowrap"><a class="btn-sm-action btn-confirm" href="{{ url_for('admin_cars', edit=car['car_id']) }}"><i class="bi bi-pencil"></i> Edit</a>
+                <form method="post" class="d-inline">
+                    <input type="hidden" name="action" value="toggle">
+                    <input type="hidden" name="car_id" value="{{ car['car_id'] }}">
+                    <button class="btn-sm-action {{ 'btn-cancel' if car['is_active'] else 'btn-confirm' }}" type="submit">{{ 'Hide' if car['is_active'] else 'Enable' }}</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<div class="empty-state" id="carsRowsEmpty" hidden>No cars match your search.</div>
+</section>
+</div>
+</div>
+</main>
+<script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>

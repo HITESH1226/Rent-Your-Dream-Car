@@ -1,0 +1,31 @@
+{# Navigation fragment — included by every public/customer page. Pass `active` to highlight a link. #}
+<a class="skip-link" href="#main">Skip to content</a>
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top" id="mainNav" aria-label="Main navigation">
+    <div class="container">
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                <li class="nav-item"><a class="nav-link nav-link-custom {{ 'active' if active == 'home' }}" href="/">HOME</a></li>
+                <li class="nav-item"><a class="nav-link nav-link-custom {{ 'active' if active == 'cars' }}" href="/cars">CARS</a></li>
+                <li class="nav-item"><a class="nav-link nav-link-custom {{ 'active' if active == 'gallery' }}" href="/gallery">GALLERY</a></li>
+                <li class="nav-item"><a class="nav-link nav-link-custom {{ 'active' if active == 'contact' }}" href="/contactus">CONTACT</a></li>
+                {% if session.get('user_email') %}
+                <li class="nav-item"><a class="nav-link nav-link-custom {{ 'active' if active == 'bookings' }}" href="/my_bookings">MY BOOKINGS</a></li>
+                <li class="nav-item ms-lg-3 d-flex align-items-center gap-2 mt-2 mt-lg-0">
+                    <span class="nav-user d-none d-xl-inline"><i class="bi bi-person-circle"></i> {{ session.get('username') }}</span>
+                    <a href="/logout" class="btn btn-sm btn-outline-custom"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item ms-lg-3 d-flex align-items-center gap-2 mt-2 mt-lg-0">
+                    <a href="/login" class="btn btn-sm btn-outline-custom">Log in</a>
+                    <a href="/reg" class="btn btn-sm btn-primary-custom" style="padding:7px 18px">Sign up</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

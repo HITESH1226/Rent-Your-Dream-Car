@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Choose your pickup and return dates to book your CarRent car.">
+    <meta name="theme-color" content="#09070f">
+    <title>Book {{ car_name }} · CarRent</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/Sleek Purple CarRent Logo.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/booking.css') }}">
+</head>
+<body>
+{% set active = 'cars' %}
+{% include 'nav.html' %}
+<main id="main" class="page">
+    <div class="booking-shell">
+        <a href="{{ url_for('cars') }}" class="back-link"><i class="bi bi-arrow-left"></i> Back to cars</a>
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <section class="glass-card booking-card">
+                    <span class="eyebrow">Car rental</span>
+                    <h1 class="section-title">Book your ride</h1>
+                    <p class="text-muted mb-4">Choose your dates and get ready to hit the road.</p>
+
+                    <form method="POST" id="bookingForm" data-price="{{ price }}" novalidate>
+                        <div class="date-fields mb-3">
+                            <div>
+                                <label class="field-label" for="pickup_date">Pickup date</label>
+                                <input class="form-control-dark" type="date" id="pickup_date" name="pickup_date" required>
+                                <div class="field-error">Choose a pickup date (today or later).</div>
+                            </div>
+                            <div>
+                                <label class="field-label" for="return_date">Return date</label>
+                                <input class="form-control-dark" type="date" id="return_date" name="return_date" required>
+                                <div class="field-error">Return must be after pickup.</div>
+                            </div>
+                        </div>
+                        <div class="note-box mb-4">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <span>Your request is sent as <strong>Pending</strong>. We confirm it shortly, and you can cancel any time before that from My Bookings.</span>
+                        </div>
+                        <button type="submit" class="btn btn-primary-custom w-100 py-3" id="bookBtn" data-loading-text="Sending request…">
+                            Confirm booking <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                        <p class="field-hint text-center mt-3 mb-0">Please check your dates before confirming.</p>
+                    </form>
+                </section>
+            </div>
+            <div class="col-lg-5">
+                <aside class="glass-card booking-card" aria-label="Booking summary">
+                    <div class="car-visual mb-4"><i class="bi bi-car-front-fill" aria-hidden="true"></i></div>
+                    <p class="eyebrow mb-1">Your selected car</p>
+                    <h2 class="h4 mb-3">{{ car_name }}</h2>
+                    <div class="summary-line"><span class="text-muted">Price per day</span><span class="v">₹{{ '{:,}'.format(price) }}</span></div>
+                    <div class="summary-line"><span class="text-muted">Pickup</span><span class="v" id="sumPickup">—</span></div>
+                    <div class="summary-line"><span class="text-muted">Return</span><span class="v" id="sumReturn">—</span></div>
+                    <div class="summary-line"><span class="text-muted">Duration</span><span class="v" id="sumDays">—</span></div>
+                    <div class="summary-line total-line"><span class="text-muted">Estimated total</span><span class="v" id="sumTotal">₹0</span></div>
+                    <p class="field-hint mb-0 mt-2">The final price is confirmed by our system when you submit.</p>
+                </aside>
+            </div>
+        </div>
+    </div>
+</main>
+{% include 'footer.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>

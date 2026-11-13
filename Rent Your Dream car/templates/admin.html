@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage CarRent customer bookings.">
+    <meta name="theme-color" content="#09070f">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin dashboard · CarRent</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/Sleek Purple CarRent Logo.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_features.css') }}">
+</head>
+<body>
+<main id="main" class="page" style="padding-top:40px">
+    <div class="container">
+        <div class="admin-head">
+            <div>
+                <span class="eyebrow">Administration</span>
+                <h1 class="section-title mb-0">Booking <span class="text-accent">dashboard</span></h1>
+                <p class="text-muted mb-0 small">Review and manage customer car rental bookings.</p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{{ url_for('admin_cars') }}" class="btn btn-outline-custom btn-sm"><i class="bi bi-car-front"></i> Manage cars</a>
+                <a href="{{ url_for('admin_customers') }}" class="btn btn-outline-custom btn-sm"><i class="bi bi-people"></i> Customers</a>
+                <a href="/" class="btn btn-outline-custom btn-sm">View site</a>
+                <a href="{{ url_for('admin_logout') }}" class="btn btn-sm btn-outline-custom"><i class="bi bi-box-arrow-right"></i> Logout</a>
+            </div>
+        </div>
+
+        <div class="admin-stat-grid">
+            <div class="glass-card summary-card"><span class="num">{{ stats.total_bookings }}</span><span class="lbl">Total bookings</span><span class="admin-stat-icon"><i class="bi bi-calendar2-check"></i></span></div>
+            <div class="glass-card summary-card"><span class="num" style="color:var(--warning)">{{ stats.pending }}</span><span class="lbl">Awaiting review</span><span class="admin-stat-icon"><i class="bi bi-hourglass-split"></i></span></div>
+            <div class="glass-card summary-card"><span class="num" style="color:var(--success)">{{ stats.confirmed }}</span><span class="lbl">Confirmed bookings</span><span class="admin-stat-icon"><i class="bi bi-check-circle"></i></span></div>
+            <div class="glass-card summary-card"><span class="num" style="color:var(--gold)">₹{{ '{:,}'.format(stats.revenue) }}</span><span class="lbl">Confirmed revenue</span><span class="admin-stat-icon"><i class="bi bi-currency-rupee"></i></span></div>
+        </div>
+        <div class="admin-stat-grid admin-stat-grid-small">
+            <div class="glass-card admin-mini-stat"><i class="bi bi-people"></i><div><strong>{{ stats.customers }}</strong><span>Registered customers</span></div><a href="{{ url_for('admin_customers') }}">Manage</a></div>
+            <div class="glass-card admin-mini-stat"><i class="bi bi-car-front"></i><div><strong>{{ stats.active_cars }} <small>/ {{ stats.total_cars }}</small></strong><span>Available fleet vehicles</span></div><a href="{{ url_for('admin_cars') }}">Manage</a></div>
+            <div class="glass-card admin-mini-stat"><i class="bi bi-x-circle"></i><div><strong>{{ stats.cancelled }}</strong><span>Cancelled bookings</span></div></div>
+        </div>
+        <section class="glass-card admin-chart-card" aria-labelledby="revenue-title">
+            <div class="admin-chart-heading"><div><span class="eyebrow">Performance</span><h2 id="revenue-title">Monthly confirmed revenue</h2></div><span class="small text-muted">Based on pickup month</span></div>
+            {% if monthly %}
+            {% set max_revenue = monthly|map(attribute='revenue')|max %}
+            <div class="revenue-bars">
+                {% for item in monthly %}
+                <div class="revenue-bar-item"><span class="revenue-value">₹{{ '{:,}'.format(item['revenue']) }}</span><div class="revenue-bar-track"><div class="revenue-bar" style="height:{{ (item['revenue'] / max_revenue * 100) if max_revenue else 0 }}%"></div></div><span class="revenue-month">{{ item['month'] }}</span></div>
+                {% endfor %}
+            </div>
+            {% else %}<p class="text-muted mb-0">Revenue charts will appear once confirmed bookings are recorded.</p>{% endif %}
+        </section>
+        {% set pending = bookings|selectattr('status', 'equalto', 'Pending')|list %}
+        {% set confirmed = bookings|selectattr('status', 'equalto', 'Confirmed')|list %}
+        {% set cancelled = bookings|selectattr('status', 'equalto', 'Cancelled')|list %}
+        {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="admin-flash {{ category }}">{{ message }}</div>{% endfor %}{% endwith %}
+        {% if bookings %}
+        <div class="toolbar-row">
+            <div class="tabs mb-0" role="group" aria-label="Filter by status" data-status-tabs="#adminRows">
+                <button class="tab-btn active" data-status="all">All <span class="count">{{ bookings|length }}</span></button>
+                <button class="tab-btn" data-status="Pending">Pending <span class="count">{{ pending|length }}</span></button>
+                <button class="tab-btn" data-status="Confirmed">Confirmed <span class="count">{{ confirmed|length }}</span></button>
+                <button class="tab-btn" data-status="Cancelled">Cancelled <span class="count">{{ cancelled|length }}</span></button>
+            </div>
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="search" class="form-control-dark" placeholder="Search customer, e-mail or car…" aria-label="Search bookings" data-table-search="#adminRows">
+            </div>
+        </div>
+
+        <div class="glass-card table-card">
+            <table class="data-table stack-table">
+                <thead>
+                    <tr><th>ID</th><th>Customer</th><th>Car</th><th>Dates</th><th>Days</th><th>Total</th><th>Booking</th><th>Payment</th><th>Action</th></tr>
+                </thead>
+                <tbody id="adminRows">
+                    {% for booking in bookings %}
+                    <tr data-status="{{ booking['status'] }}">
+                        <td data-label="ID"><span class="booking-id">#{{ booking['booking_id'] }}</span></td>
+                        <td data-label="Customer"><strong>{{ booking['customer_name'] }}</strong><br><small class="text-muted">{{ booking['customer_email'] }}</small></td>
+                        <td data-label="Car">{{ booking['car_name'] }}</td>
+                        <td data-label="Dates" class="text-nowrap">{{ booking['pickup_date'] }} <i class="bi bi-arrow-right text-muted"></i> {{ booking['return_date'] }}</td>
+                        <td data-label="Days">{{ booking['total_days'] }}</td>
+                        <td data-label="Total"><strong>₹{{ '{:,}'.format(booking['total_price']) }}</strong></td>
+                        <td data-label="Booking"><span class="status-badge status-{{ booking['status']|lower }}">{{ booking['status'] }}</span></td>
+                        <td data-label="Payment"><span class="text-muted">{{ booking['payment_status'] }}</span>{% if booking['payment_method'] %}<br><small class="text-muted">{{ booking['payment_method'] }}</small>{% endif %}</td>
+                        <td data-label="Action" class="text-nowrap">
+                            {% if booking['status'] == 'Pending' %}
+                            <form action="{{ url_for('booking_status') }}" method="POST" class="d-inline">
+                                <input type="hidden" name="booking_id" value="{{ booking['booking_id'] }}">
+                                <input type="hidden" name="status" value="Confirmed">
+                                <button type="submit" class="btn-sm-action btn-confirm"><i class="bi bi-check-lg"></i> Confirm</button>
+                            </form>
+                            <form action="{{ url_for('booking_status') }}" method="POST" class="d-inline"
+                                  data-confirm="Cancel booking #{{ booking['booking_id'] }} for {{ booking['customer_name'] }}?">
+                                <input type="hidden" name="booking_id" value="{{ booking['booking_id'] }}">
+                                <input type="hidden" name="status" value="Cancelled">
+                                <button type="submit" class="btn-sm-action btn-cancel"><i class="bi bi-x-lg"></i> Cancel</button>
+                            </form>
+                            {% else %}<span class="text-muted">—</span>{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="empty-state" id="adminRowsEmpty" hidden>No bookings match your filters.</div>
+        </div>
+        {% else %}
+        <div class="glass-card empty-state"><i class="bi bi-inbox"></i><h5>No bookings found</h5><p>New customer bookings will appear here.</p></div>
+        {% endif %}
+    </div>
+</main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>

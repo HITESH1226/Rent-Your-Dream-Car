@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse CarRent's fleet of hatchbacks, sedans and compact SUVs with clear daily prices.">
+    <meta name="theme-color" content="#09070f">
+    <title>Our Fleet · CarRent</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/Sleek Purple CarRent Logo.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+<body>
+{% set active = 'cars' %}
+{% include 'nav.html' %}
+<main id="main" class="page">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="eyebrow">Our fleet</span>
+            <h1 class="section-title">Choose your <span class="text-accent">ride</span></h1>
+            <p class="text-muted">Comfortable cars at honest daily prices. Pick one and book in under a minute.</p>
+        </div>
+
+        <div class="fleet-toolbar">
+            <div class="d-flex flex-wrap gap-2" role="group" aria-label="Filter by category">
+                <button class="filter-btn active" data-filter="all">All cars</button>
+                <button class="filter-btn" data-filter="Hatchback">Hatchback</button>
+                <button class="filter-btn" data-filter="Sedan">Sedan</button>
+                <button class="filter-btn" data-filter="SUV">SUV</button>
+            </div>
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="search" id="carSearch" class="form-control-dark" placeholder="Search cars…" aria-label="Search cars">
+                </div>
+                <select id="carSort" class="form-control-dark" style="width:auto" aria-label="Sort cars">
+                    <option value="default">Sort: Featured</option>
+                    <option value="low">Price: low to high</option>
+                    <option value="high">Price: high to low</option>
+                    <option value="name">Name: A–Z</option>
+                </select>
+            </div>
+        </div>
+        <p class="text-muted small" id="carCount" aria-live="polite"></p>
+
+        <div class="row g-4" id="carGrid">
+            {% for car in fleet %}
+            <div class="col-md-6 col-lg-4 car-col" data-category="{{ car['category'] }}" data-name="{{ car['name'] }}" data-price="{{ car['price_per_day'] }}">
+                <div class="glass-card car-card position-relative">
+                    <span class="car-badge">{{ car['category'] }}</span>
+                    <div class="car-img-wrapper"><img src="{{ car['image_url'] or url_for('static', filename='images/Audi R8 at Sunset Showroom.png') }}" alt="{{ car['name'] }}" loading="lazy"></div>
+                    <h4 class="mb-1">{{ car['name'] }}</h4>
+                    <p class="text-muted small mb-0">{{ car['category'] }} rental</p>
+                    <div class="car-specs">
+                        <div class="car-spec-item"><i class="bi bi-fuel-pump"></i> Fuel varies</div>
+                        <div class="car-spec-item"><i class="bi bi-car-front"></i> Rental car</div>
+                        <div class="car-spec-item"><i class="bi bi-people-fill"></i> 5 Seats</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <div class="car-price">₹{{ '{:,}'.format(car['price_per_day']) }}<span>/day</span></div>
+                        <a href="{{ url_for('book_car', car_name=car['name']) }}" class="btn btn-primary-custom py-2 px-4" aria-label="Book {{ car['name'] }}">Book</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="empty-state" id="carEmpty" hidden>
+            <i class="bi bi-emoji-frown"></i>
+            <h5>No cars match your search</h5>
+            <p>Try a different keyword or category.</p>
+            <button class="btn btn-outline-custom" id="carReset">Reset filters</button>
+        </div>
+    </div>
+</main>
+{% include 'footer.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>

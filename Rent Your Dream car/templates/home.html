@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rent comfortable, well-priced cars in minutes. Pick your car, choose your dates and book online with CarRent.">
+    <meta name="theme-color" content="#09070f">
+    <title>Premium Car Rental in Pune · Rent Your Dream</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/Sleek Purple CarRent Logo.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+<body>
+{% set active = 'home' %}
+{% include 'nav.html' %}
+<main id="main">
+    <section class="hero-section" aria-labelledby="hero-title">
+        <div class="container hero-content">
+            <div class="row"><div class="col-lg-7 col-xl-6">
+                {% if session.get('username') %}
+                <span class="hero-badge"><i class="bi bi-person-check-fill"></i> Welcome back, {{ session['username'] }}</span>
+                <h1 class="hero-title" id="hero-title">Where to <span class="grad">next?</span></h1>
+                <p class="hero-lead">Pick a car, choose your dates and you're on the road. Your bookings are always one click away.</p>
+                <div class="hero-actions">
+                    <a href="/cars" class="btn btn-primary-custom btn-lg">Browse cars <i class="bi bi-arrow-right ms-1"></i></a>
+                    <a href="/my_bookings" class="btn btn-outline-custom btn-lg">My bookings</a>
+                </div>
+                {% else %}
+                <span class="hero-badge"><i class="bi bi-stars"></i> Premium cars · Affordable rates</span>
+                <h1 class="hero-title" id="hero-title">Drive your <span class="grad">dreams</span></h1>
+                <p class="hero-lead">Rent a comfortable, well-kept car in a few clicks. Transparent daily pricing, instant booking requests and easy cancellation.</p>
+                <div class="hero-actions">
+                    <a href="/cars" class="btn btn-primary-custom btn-lg">Explore the site <i class="bi bi-arrow-right ms-1"></i></a>
+                    <a href="/reg" class="btn btn-outline-custom btn-lg">Create account</a>
+                </div>
+                {% endif %}
+                <div class="hero-trust">
+                    <span><i class="bi bi-check-circle-fill"></i>No hidden charges</span>
+                    <span><i class="bi bi-check-circle-fill"></i>Cancel while pending</span>
+                    <span><i class="bi bi-check-circle-fill"></i>Book in under a minute</span>
+                </div>
+            </div></div>
+        </div>
+        <a href="#why" class="scroll-hint" aria-label="Scroll down"><i class="bi bi-chevron-double-down"></i></a>
+    </section>
+
+    <section class="stats-strip" aria-label="At a glance">
+        <div class="container">
+            <div class="glass-card p-2"><div class="row g-0 text-center">
+                <div class="col-6 col-md-3 stat-box"><div class="num" data-count="6">6</div><div class="lbl">Cars in our fleet</div></div>
+                <div class="col-6 col-md-3 stat-box"><div class="num">₹3,000</div><div class="lbl">Starting per day</div></div>
+                <div class="col-6 col-md-3 stat-box"><div class="num">3</div><div class="lbl">Categories: Hatchback · Sedan · SUV</div></div>
+                <div class="col-6 col-md-3 stat-box"><div class="num">24/7</div><div class="lbl">Online booking</div></div>
+            </div></div>
+        </div>
+    </section>
+
+    <section id="why" class="section-padding">
+        <div class="container">
+            <div class="text-center mb-5 reveal">
+                <span class="eyebrow">Why CarRent</span>
+                <h2 class="section-title">Everything you need for a <span class="text-accent">smooth ride</span></h2>
+                <p class="text-muted mx-auto" style="max-width:560px">We keep renting simple, so you can focus on the journey.</p>
+            </div>
+            <div class="row g-4">
+                {% for icon, title, text in [
+                    ('tag-fill', 'Clear pricing', 'Every car shows its daily rate up front. Your total is calculated from your dates before you confirm.'),
+                    ('calendar-check-fill', 'Flexible dates', 'Choose any pickup and return date. We check availability so you never double-book.'),
+                    ('x-circle-fill', 'Easy cancellation', 'Changed your plans? Cancel a pending booking in one click from My Bookings.'),
+                    ('headset', 'Friendly support', 'Questions before you book? Our team is a message away, Monday to Saturday.')] %}
+                <div class="col-sm-6 col-lg-3 reveal">
+                    <div class="glass-card feature-card hover-lift">
+                        <div class="feature-icon"><i class="bi bi-{{ icon }}"></i></div>
+                        <h5>{{ title }}</h5>
+                        <p class="text-muted mb-0">{{ text }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding pt-0">
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4 reveal">
+                <div>
+                    <span class="eyebrow">Popular picks</span>
+                    <h2 class="section-title mb-0">Featured <span class="text-accent">cars</span></h2>
+                </div>
+                <a href="/cars" class="btn btn-outline-custom">View all cars <i class="bi bi-arrow-right ms-1"></i></a>
+            </div>
+            <div class="row g-4">
+                {% for name, kind, price, img in [
+                    ('BMW', 'Luxury', 5000, 'https://file.aiquickdraw.com/imgcompressed/img/compressed_6c202a83375aae97ab205bec54ce96bb.webp'),
+                    ('LAMBORGINI URUS', 'Premium Offroad', 6000, 'https://file.aiquickdraw.com/imgcompressed/img/compressed_f71fac8651cb239b369c8774380e31a7.webp'),
+                    ('MAHINDRA THAR', 'Offroad', 4000, 'https://file.aiquickdraw.com/imgcompressed/img/compressed_42d1e0c02a846a396f57f3a74068992b.webp')] %}
+                <div class="col-md-6 col-lg-4 reveal">
+                    <div class="glass-card car-card">
+                        <div class="car-img-wrapper"><img src="{{ img }}" alt="{{ name }}" loading="lazy"></div>
+                        <h4 class="mb-0">{{ name }}</h4>
+                        <p class="text-muted small mb-3">{{ kind }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <div class="car-price">₹{{ '{:,}'.format(price) }}<span>/day</span></div>
+                            <a href="{{ url_for('book_car', car_name=name) }}" class="btn btn-primary-custom py-2 px-4">Book</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding pt-0">
+        <div class="container">
+            <div class="text-center mb-5 reveal">
+                <span class="eyebrow">How it works</span>
+                <h2 class="section-title">Book in <span class="text-accent">three steps</span></h2>
+            </div>
+            <div class="row g-4">
+                {% for n, title, text in [
+                    (1, 'Choose your car', 'Filter the fleet by hatchback, sedan or SUV and pick the one that suits your trip.'),
+                    (2, 'Pick your dates', 'Select pickup and return dates. The total price is shown before you confirm.'),
+                    (3, 'Get confirmed', 'Send your booking request. Our team confirms it and you can track it under My Bookings.')] %}
+                <div class="col-md-4 reveal"><div class="step">
+                    <div class="step-num">{{ n }}</div>
+                    <h5>{{ title }}</h5>
+                    <p class="text-muted mb-0">{{ text }}</p>
+                </div></div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding pt-0">
+        <div class="container">
+            <div class="glass-card cta-band reveal">
+                <h2 class="section-title">Ready to hit the road?</h2>
+                <p class="text-muted mb-4">Create a free account and book your first car today.</p>
+                {% if session.get('username') %}
+                <a href="/cars" class="btn btn-primary-custom btn-lg">Book a car</a>
+                {% else %}
+                <a href="/reg" class="btn btn-primary-custom btn-lg me-2">Get started</a>
+                <a href="/login" class="btn btn-outline-custom btn-lg">I already have an account</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</main>
+{% include 'footer.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>

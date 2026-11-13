@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A closer look at the CarRent experience: cars, roads and journeys.">
+    <meta name="theme-color" content="#09070f">
+    <title>Gallery · CarRent</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/Sleek Purple CarRent Logo.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+<body>
+{% set active = 'gallery' %}
+{% include 'nav.html' %}
+<main id="main" class="page">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="eyebrow">Gallery</span>
+            <h1 class="section-title">Journeys on <span class="text-accent">the road</span></h1>
+            <p class="text-muted">Tap any photo to view it full size. Use the arrow keys to move between photos.</p>
+        </div>
+        <div class="gallery-grid">
+            <button type="button" class="gallery-item glass-card border-0 reveal" data-bs-toggle="modal" data-bs-target="#imageModal"
+                    data-index="0" data-img="{{ url_for('static', filename='images/02f0215f-2797-4df5-a747-2c084a791690.webp') }}" aria-label="Open photo 1">
+                <img src="{{ url_for('static', filename='images/02f0215f-2797-4df5-a747-2c084a791690.webp') }}" alt="CarRent gallery photo 1" loading="lazy">
+                <span class="gallery-overlay"><i class="bi bi-zoom-in"></i></span>
+            </button>
+
+            <button type="button" class="gallery-item glass-card border-0 reveal" data-bs-toggle="modal" data-bs-target="#imageModal"
+                    data-index="1" data-img="{{ url_for('static', filename='images/6.webp') }}" aria-label="Open photo 2">
+                <img src="{{ url_for('static', filename='images/6.webp') }}" alt="CarRent gallery photo 2" loading="lazy">
+                <span class="gallery-overlay"><i class="bi bi-zoom-in"></i></span>
+            </button>
+
+            <button type="button" class="gallery-item glass-card border-0 reveal" data-bs-toggle="modal" data-bs-target="#imageModal"
+                    data-index="2" data-img="{{ url_for('static', filename='images/travel-india-by-car-guide.jpg') }}" aria-label="Open photo 3">
+                <img src="{{ url_for('static', filename='images/travel-india-by-car-guide.jpg') }}" alt="CarRent gallery photo 3" loading="lazy">
+                <span class="gallery-overlay"><i class="bi bi-zoom-in"></i></span>
+            </button>
+
+            <button type="button" class="gallery-item glass-card border-0 reveal" data-bs-toggle="modal" data-bs-target="#imageModal"
+                    data-index="3" data-img="{{ url_for('static', filename='images/Travelling-to-India-By-Car.webp') }}" aria-label="Open photo 4">
+                <img src="{{ url_for('static', filename='images/Travelling-to-India-By-Car.webp') }}" alt="CarRent gallery photo 4" loading="lazy">
+                <span class="gallery-overlay"><i class="bi bi-zoom-in"></i></span>
+            </button>
+
+            <button type="button" class="gallery-item glass-card border-0 reveal" data-bs-toggle="modal" data-bs-target="#imageModal"
+                    data-index="4" data-img="{{ url_for('static', filename='images/pexels-photo-15226559.avif') }}" aria-label="Open photo 5">
+                <img src="{{ url_for('static', filename='images/pexels-photo-15226559.avif') }}" alt="CarRent gallery photo 5" loading="lazy">
+                <span class="gallery-overlay"><i class="bi bi-zoom-in"></i></span>
+            </button>
+
+            <button type="button" class="gallery-item glass-card border-0 reveal" data-bs-toggle="modal" data-bs-target="#imageModal"
+                    data-index="5" data-img="{{ url_for('static', filename='images/a-young-girl-stands-on-a-high-bank-and-looks-at-the-beautiful-nture-photo.jpg') }}" aria-label="Open photo 6">
+                <img src="{{ url_for('static', filename='images/a-young-girl-stands-on-a-high-bank-and-looks-at-the-beautiful-nture-photo.jpg') }}" alt="CarRent gallery photo 6" loading="lazy">
+                <span class="gallery-overlay"><i class="bi bi-zoom-in"></i></span>
+            </button>
+
+            <button type="button" class="gallery-item glass-card border-0 reveal" data-bs-toggle="modal" data-bs-target="#imageModal"
+                    data-index="6" data-img="{{ url_for('static', filename='images/cb20922dee167c8fdd9c8c55e6931521.jpg') }}" aria-label="Open photo 7">
+                <img src="{{ url_for('static', filename='images/cb20922dee167c8fdd9c8c55e6931521.jpg') }}" alt="CarRent gallery photo 7" loading="lazy">
+                <span class="gallery-overlay"><i class="bi bi-zoom-in"></i></span>
+            </button>
+
+            <button type="button" class="gallery-item glass-card border-0 reveal" data-bs-toggle="modal" data-bs-target="#imageModal"
+                    data-index="7" data-img="{{ url_for('static', filename='images/istockphoto-1344954298-612x612.jpg') }}" aria-label="Open photo 8">
+                <img src="{{ url_for('static', filename='images/istockphoto-1344954298-612x612.jpg') }}" alt="CarRent gallery photo 8" loading="lazy">
+                <span class="gallery-overlay"><i class="bi bi-zoom-in"></i></span>
+            </button>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade lightbox" id="imageModal" tabindex="-1" aria-label="Photo viewer" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <button type="button" class="btn-close btn-close-white ms-auto me-2 mb-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="lightbox-nav prev" id="lbPrev" aria-label="Previous photo"><i class="bi bi-chevron-left"></i></button>
+            <button type="button" class="lightbox-nav next" id="lbNext" aria-label="Next photo"><i class="bi bi-chevron-right"></i></button>
+            <div class="modal-body text-center p-0">
+                <img src="" id="modalImage" class="img-fluid rounded" style="max-height:80vh" alt="Gallery photo preview">
+                <div class="lightbox-count" id="lbCount"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'footer.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>

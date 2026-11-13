@@ -1,0 +1,5 @@
+/* My bookings page (base styles live in home.css) */
+.booking-id { font-family: var(--font-heading); font-weight: 600; color: var(--accent-light); }
+.car-cell { font-weight: 600; }
+.date-range { white-space: nowrap; color: #d6d1e2; }
+.date-range i { color: var(--muted); margin: 0 4px; }

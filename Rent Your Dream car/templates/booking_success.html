@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your CarRent booking request has been received.">
+    <meta name="theme-color" content="#09070f">
+    <title>Booking received · CarRent</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/Sleek Purple CarRent Logo.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+<body>
+{% set active = 'bookings' %}
+{% include 'nav.html' %}
+<main id="main" class="page">
+    <div class="container" style="max-width:640px">
+        <div class="glass-card p-4 p-md-5 text-center">
+            <div class="success-icon"><i class="bi bi-check-lg"></i></div>
+            <h1 class="h2">Booking request received!</h1>
+            <p class="text-muted">Thanks {{ name }}, your booking has been saved. We'll confirm it shortly.</p>
+
+            <div class="timeline" aria-label="Booking progress">
+                <div class="tl-step done"><div class="tl-dot"><i class="bi bi-check"></i></div>Requested</div>
+                <div class="tl-step"><div class="tl-dot"></div>Confirmed</div>
+                <div class="tl-step"><div class="tl-dot"></div>Pick-up</div>
+            </div>
+
+            <div class="text-start mb-4">
+                <div class="summary-line"><span class="text-muted">Booking ID</span><span class="v">#{{ booking_id }}</span></div>
+                <div class="summary-line"><span class="text-muted">Customer</span><span class="v">{{ name }}</span></div>
+                <div class="summary-line"><span class="text-muted">Car</span><span class="v">{{ car_name }}</span></div>
+                <div class="summary-line"><span class="text-muted">Pickup</span><span class="v">{{ pickup }}</span></div>
+                <div class="summary-line"><span class="text-muted">Return</span><span class="v">{{ return_date }}</span></div>
+                <div class="summary-line"><span class="text-muted">Rental days</span><span class="v">{{ total_days }}</span></div>
+                <div class="summary-line"><span class="text-muted">Price per day</span><span class="v">₹{{ '{:,}'.format(price) }}</span></div>
+                <div class="summary-line"><span class="text-muted">Status</span><span class="v"><span class="status-badge status-pending">Pending</span></span></div>
+                <div class="summary-line total-line"><span class="text-muted">Total price</span><span class="v">₹{{ '{:,}'.format(total_price) }}</span></div>
+            </div>
+
+            <div class="d-flex flex-wrap justify-content-center gap-2 no-print">
+                <a href="{{ url_for('payment_page', booking_id=booking_id) }}" class="btn btn-primary-custom"><i class="bi bi-credit-card me-1"></i> Continue to payment</a>
+                <a href="{{ url_for('my_bookings') }}" class="btn btn-outline-custom">My bookings</a>
+                <a href="{{ url_for('cars') }}" class="btn btn-outline-custom">Browse more cars</a>
+                <button type="button" class="btn btn-outline-custom" data-print><i class="bi bi-printer"></i> Print</button>
+            </div>
+        </div>
+    </div>
+</main>
+{% include 'footer.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>
